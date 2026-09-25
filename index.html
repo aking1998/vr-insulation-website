@@ -917,22 +917,29 @@
   });
 
   var form = document.getElementById('contact-form');
-  var status = document.getElementById('contact-status');
+  var statusEl = document.getElementById('contact-status');
   var submitBtn = form.querySelector('button[type="submit"]');
   form.addEventListener('submit', function(e){
     e.preventDefault();
     submitBtn.disabled = true;
-    status.style.display = 'block';
-    status.textContent = 'Sending your enquiry...';
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Sending your enquiry...';
     fetch('https://formsubmit.co/ajax/vrinsulationpune@gmail.com', {
       method: 'POST',
       headers: { 'Accept': 'application/json' },
       body: new FormData(form)
-    }).then(function(res){ return res.json(); }).then(function(){
-      status.textContent = 'Thank you — your enquiry has been sent to VR Insulation. We typically reply within one business day.';
-      form.reset();
+    }).then(function(res){ return res.json(); }).then(function(data){
+      var ok = data && (data.success === true || data.success === 'true');
+      if(ok){
+        statusEl.textContent = 'Thank you — your enquiry has been sent to VR Insulation. We typically reply within one business day.';
+        form.reset();
+      } else if(data && /activation/i.test(data.message || '')){
+        statusEl.textContent = 'Almost there — this form needs a one-time activation. Please check the vrinsulationpune@gmail.com inbox (and spam folder) for an email from FormSubmit and click "Activate Form," then submit this enquiry again.';
+      } else {
+        statusEl.textContent = (data && data.message) ? data.message : 'Something went wrong sending this form. Please email us directly at vrinsulationpune@gmail.com or call +91 95118 91979.';
+      }
     }).catch(function(){
-      status.textContent = 'Something went wrong sending this form. Please email us directly at vrinsulationpune@gmail.com or call +91 95118 91979.';
+      statusEl.textContent = 'Something went wrong sending this form. Please email us directly at vrinsulationpune@gmail.com or call +91 95118 91979.';
     }).finally(function(){
       submitBtn.disabled = false;
     });
