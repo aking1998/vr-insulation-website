@@ -1,3 +1,4 @@
+<meta charset="UTF-8">
 <title>VR Insulation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -494,6 +495,132 @@
   }
   @media (max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;}}
   @media (max-width:560px){.footer-grid{grid-template-columns:1fr;}}
+
+  /* ---------- Chat assistant ---------- */
+  .vr-chat-root{position:fixed;right:1.25rem;bottom:1.25rem;z-index:200;font-family:var(--ff-body);}
+  .vr-chat-backdrop{position:fixed;inset:0;background:rgba(11,37,64,0.4);opacity:0;pointer-events:none;transition:opacity .18s ease;}
+  .vr-chat-toggle{
+    width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
+    position:relative;
+    background:linear-gradient(135deg, var(--accent-2), var(--accent-strong));
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 28px -10px rgba(229,18,126,0.55), 0 0 0 0 rgba(35,189,255,0.45);
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    animation:vrChatPulse 2.8s ease-in-out infinite;
+  }
+  .vr-chat-toggle:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 18px 34px -10px rgba(229,18,126,0.6);}
+  .vr-chat-toggle svg{width:26px;height:26px;position:relative;z-index:1;}
+  .vr-chat-toggle .vr-chat-icon-close{display:none;}
+  .vr-chat-root.open .vr-chat-toggle{background:var(--accent-strong);animation:none;box-shadow:0 14px 28px -10px rgba(11,37,64,0.45);}
+  .vr-chat-root.open .vr-chat-toggle .vr-chat-icon-open{display:none;}
+  .vr-chat-root.open .vr-chat-toggle .vr-chat-icon-close{display:block;}
+  @keyframes vrChatPulse{
+    0%,100%{box-shadow:0 14px 28px -10px rgba(229,18,126,0.55), 0 0 0 0 rgba(35,189,255,0.45);}
+    50%{box-shadow:0 14px 28px -10px rgba(229,18,126,0.55), 0 0 0 9px rgba(35,189,255,0);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .vr-chat-toggle{animation:none;}
+  }
+  .vr-chat-badge{
+    position:absolute;top:-4px;right:-4px;
+    background:var(--accent);color:#fff;
+    font-family:var(--ff-mono);font-size:0.62rem;font-weight:700;
+    width:20px;height:20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid #fff;
+  }
+  .vr-chat-panel{
+    position:fixed;right:1.25rem;bottom:5.5rem;
+    width:min(380px, calc(100vw - 2rem));
+    height:min(560px, calc(100vh - 7.5rem));
+    background:var(--bg-card);
+    border:1px solid var(--border-strong);
+    border-radius:14px;
+    box-shadow:0 30px 60px -20px rgba(11,37,64,0.35);
+    display:flex;flex-direction:column;overflow:hidden;
+    opacity:0;transform:translateY(16px) scale(0.98);pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease;
+  }
+  .vr-chat-root.open .vr-chat-panel{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+  .vr-chat-header{
+    flex:none;display:flex;align-items:center;gap:0.7rem;
+    padding:0.9rem 1rem;
+    background:linear-gradient(120deg,var(--accent-strong),var(--accent-2));
+    color:#fff;
+  }
+  .vr-chat-header-avatar{
+    width:36px;height:36px;border-radius:50%;flex:none;
+    background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--ff-mono);font-weight:700;font-size:0.72rem;
+  }
+  .vr-chat-header-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:0.1rem;}
+  .vr-chat-header-text strong{font-size:0.92rem;font-family:var(--ff-display);}
+  .vr-chat-header-text span{font-size:0.72rem;opacity:0.85;}
+  .vr-chat-close{
+    flex:none;background:rgba(255,255,255,0.15);border:none;border-radius:50%;
+    width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+    color:#fff;cursor:pointer;
+  }
+  .vr-chat-close svg{width:15px;height:15px;}
+  .vr-chat-messages{
+    flex:1;overflow-y:auto;padding:1rem;
+    display:flex;flex-direction:column;gap:0.6rem;
+    background:var(--bg-raised);
+  }
+  .vr-chat-msg{max-width:86%;padding:0.6rem 0.8rem;border-radius:12px;font-size:0.86rem;line-height:1.5;white-space:pre-line;}
+  .vr-chat-msg.bot{
+    align-self:flex-start;background:var(--bg-card);border:1px solid var(--border);
+    color:var(--text);border-bottom-left-radius:3px;
+  }
+  .vr-chat-msg.user{
+    align-self:flex-end;background:var(--accent-strong);color:#fff;
+    border-bottom-right-radius:3px;
+  }
+  .vr-chat-typing{align-self:flex-start;display:flex;gap:4px;padding:0.7rem 0.9rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;border-bottom-left-radius:3px;}
+  .vr-chat-typing span{width:6px;height:6px;border-radius:50%;background:var(--text-faint);animation:vrChatBlink 1.2s infinite ease-in-out;}
+  .vr-chat-typing span:nth-child(2){animation-delay:.15s;}
+  .vr-chat-typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes vrChatBlink{0%,80%,100%{opacity:0.25;}40%{opacity:1;}}
+  .vr-chat-quick{
+    flex:none;display:flex;flex-wrap:wrap;gap:0.4rem;
+    padding:0.6rem 1rem;background:var(--bg-raised);border-top:1px solid var(--border);
+  }
+  .vr-chat-quick button{
+    font-family:var(--ff-body);font-size:0.76rem;font-weight:600;
+    color:var(--accent-strong);background:#fff;border:1px solid var(--border-strong);
+    border-radius:999px;padding:0.4rem 0.75rem;cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .vr-chat-quick button:hover{background:var(--accent-strong);color:#fff;}
+  .vr-chat-inputrow{
+    flex:none;display:flex;gap:0.5rem;padding:0.7rem;
+    background:var(--bg-card);border-top:1px solid var(--border);
+  }
+  .vr-chat-inputrow input{
+    flex:1;min-width:0;border:1px solid var(--border-strong);border-radius:999px;
+    padding:0.6rem 1rem;font-size:0.86rem;font-family:var(--ff-body);color:var(--text);
+    background:var(--bg);
+  }
+  .vr-chat-inputrow input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .vr-chat-inputrow button{
+    flex:none;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--accent-2);color:#fff;display:flex;align-items:center;justify-content:center;
+  }
+  .vr-chat-inputrow button svg{width:16px;height:16px;}
+  .vr-chat-disclaimer{
+    flex:none;text-align:center;font-size:0.66rem;color:var(--text-faint);
+    padding:0.4rem 0.5rem 0.6rem;background:var(--bg-card);
+  }
+  @media (max-width:560px){
+    .vr-chat-panel{
+      right:0.75rem;left:0.75rem;bottom:5.25rem;
+      width:auto;height:min(70vh, 560px);
+    }
+    .vr-chat-root{right:1rem;bottom:1rem;}
+    .vr-chat-root.open .vr-chat-backdrop{opacity:1;pointer-events:auto;}
+  }
 </style>
 
 <header class="site">
@@ -887,6 +1014,39 @@
   </div>
 </footer>
 
+<!-- VR Insulation chat assistant -->
+<div class="vr-chat-root" id="vr-chat-root">
+  <div class="vr-chat-backdrop" id="vr-chat-backdrop"></div>
+  <div class="vr-chat-panel" id="vr-chat-panel" role="dialog" aria-label="VR Insulation chat assistant" aria-hidden="true">
+    <div class="vr-chat-header">
+      <div class="vr-chat-header-avatar">VR</div>
+      <div class="vr-chat-header-text">
+        <strong>VR Insulation Assistant</strong>
+        <span>Ask about our services &amp; projects</span>
+      </div>
+      <button class="vr-chat-close" id="vr-chat-close" aria-label="Close chat" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="vr-chat-messages" id="vr-chat-messages"></div>
+    <div class="vr-chat-quick" id="vr-chat-quick"></div>
+    <form class="vr-chat-inputrow" id="vr-chat-form">
+      <input type="text" id="vr-chat-input" placeholder="Type your question..." autocomplete="off" aria-label="Type your question" />
+      <button type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </button>
+    </form>
+    <div class="vr-chat-disclaimer">Automated assistant &middot; for detailed queries, call +91 95118 91979</div>
+  </div>
+  <button class="vr-chat-toggle" id="vr-chat-toggle" aria-label="Open chat assistant" aria-expanded="false" type="button">
+    <svg class="vr-chat-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12c0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8-1.06 0-2.07-.207-2.994-.583L4 21l1.174-4.7C4.42 15.06 4 13.57 4 12Z"/>
+      <path d="M17.3 3.6c.16 1.02.94 1.8 1.96 1.96-1.02.16-1.8.94-1.96 1.96-.16-1.02-.94-1.8-1.96-1.96 1.02-.16 1.8-.94 1.96-1.96Z" fill="#fff" stroke="none"/>
+    </svg>
+    <svg class="vr-chat-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -944,4 +1104,318 @@
       submitBtn.disabled = false;
     });
   });
+</script>
+
+<script>
+(function(){
+  // ---------- Knowledge base ----------
+  // Each entry: id, keywords (words/phrases matched against the visitor's message),
+  // answer text, and optional quick-reply chips to show after this answer.
+  var KB = [
+    {
+      id:'greeting',
+      keywords:['hi','hello','hey','hii','helo','yo','namaste','good morning','good afternoon','good evening'],
+      answer:"Hello! I'm Vilas from VR Insulation. I can help with our services, the industries we work in, our experience, materials we use, or how to get a quote. What would you like to know?",
+      quick:['Our services','Industries we serve','Get a quote','Contact details']
+    },
+    {
+      id:'about',
+      keywords:['who are you','who is vr insulation','what is vr insulation','about vr insulation','about your company','tell me about your company','company info','background of your company','what is this company'],
+      answer:"VR Insulation is a Pune-based industrial insulation contractor with 30+ years of combined experience. We handle hot insulation, cold insulation, dual (combination) systems, weatherproof cladding, thermal audits and insulation consultancy for refineries, plants and process industries all over India.",
+      quick:['Our services','Industries we serve','Where are you based']
+    },
+    {
+      id:'experience',
+      keywords:['how many years','experience','how long have you','since when','established','how old is the company'],
+      answer:"We bring 30+ years of combined experience in industrial insulation, having worked on major projects across India for clients like Reliance Industries, HPCL, IOCL, Deepak Fertilizer, Hindustan Unilever and many more.",
+      quick:['See our clients','Our services']
+    },
+    {
+      id:'services',
+      keywords:['service','services','what do you do','what do you offer','offerings','what work do you do','what can you do'],
+      answer:"We offer six core services: Hot Insulation, Cold Insulation, Dual (Combination) Systems, Weatherproof Cladding & Sheeting, Thermal Insulation Audits, and Insulation Consultancy. Ask me about any of these, or check the Services section on this page for more detail.",
+      quick:['Hot insulation','Cold insulation','Cladding & weatherproofing']
+    },
+    {
+      id:'hot',
+      keywords:['hot insulation','high temperature','lrb','rockwool','r/w','hot service'],
+      answer:"Hot insulation is used where the service temperature is above ambient — for reactors, vessels, pipelines and tanks. We use LRB (preformed Rockwool pipe sections), calcium silicate and cast-in-situ systems, sized to the exact pipe diameter and required thickness. It also protects personnel from burns and reduces heat loss, cutting boiler load.",
+      quick:['Cold insulation','Dual insulation','Get a quote']
+    },
+    {
+      id:'cold',
+      keywords:['cold insulation','chilled','cryogenic','puf','pir','condensation','sweating'],
+      answer:"Cold insulation maintains temperatures below ambient — for chilled and cryogenic lines. We use PUF/PIR, foam glass and aerogel mat systems that are vapour-sealed to stop condensation and heat ingress, and reduce the load on brine and chilling systems.",
+      quick:['Hot insulation','Dual insulation','Get a quote']
+    },
+    {
+      id:'dual',
+      keywords:['dual insulation','combination system','combination insulation','hot and cold together','dual system'],
+      answer:"Dual (combination) insulation is for lines carrying both hot and cold services. Hot insulation is always applied first, then cold — introducing cold insulation first can cause the materials to burn. Thickness is matched to the system's higher operating temperature.",
+      quick:['Hot insulation','Cold insulation','Get a quote']
+    },
+    {
+      id:'cladding',
+      keywords:['cladding','weatherproof','sheeting','aluminium','aluminum','waterproofing','weather protection'],
+      answer:"Our weatherproof cladding protects installed insulation from rain, sunlight and salty coastal air. We mainly use aluminium sheeting (20-25 SWG), with stainless steel, GI and aluzinc also available. Our prefabrication team custom-shapes bends, elbows, reducers, valves, flanges and vessel heads to exact size.",
+      quick:['Our services','Get a quote']
+    },
+    {
+      id:'audit',
+      keywords:['audit','energy loss','energy survey','thermal audit','energy saving'],
+      answer:"Our Thermal Insulation Audits are on-site energy-loss surveys that identify degraded or missing insulation and quantify the potential savings from fixing it — we were among the first in the industry to offer this service.",
+      quick:['Our services','Get a quote']
+    },
+    {
+      id:'consultancy',
+      keywords:['consultancy','consulting','specification','planning support','material selection'],
+      answer:"We provide insulation consultancy — specification and planning support for new-build and revamp projects, covering material selection through to execution sequencing.",
+      quick:['Our services','Get a quote']
+    },
+    {
+      id:'industries',
+      keywords:['industries','which industries','sectors','what industries do you serve','industry served'],
+      answer:"We serve 18+ industries, including oil refineries & petrochemicals, LNG terminals, fertilizers, power generation, pharmaceuticals, cement, oil & gas, chemical processing, food processing, marine engineering, textiles, ceramics and electronics manufacturing. See the Industries Served section on this page for the full list.",
+      quick:['See our clients','Our services']
+    },
+    {
+      id:'clients',
+      keywords:['client','clients','who have you worked with','projects','references','past work','portfolio','worked with'],
+      answer:"We've worked with major names including Reliance Industries (Patalganga, Hazira & Jamnagar), HPCL Refinery, IOCL Refinery, Deepak Fertilizer, Hindustan Unilever, Ambuja Cement and ABG Shipyard, among many other refineries, plants and manufacturers over 30+ years. See our full Clients list further down this page.",
+      quick:['Industries we serve','Get a quote']
+    },
+    {
+      id:'materials',
+      keywords:['material','materials','calcium silicate','foam glass','aerogel','what materials'],
+      answer:"For hot insulation we use Rockwool (LRB), calcium silicate and cast-in-situ systems. For cold insulation we use PUF/PIR, foam glass and aerogel mats. For weatherproof cladding we use aluminium, stainless steel and GI sheeting.",
+      quick:['Hot insulation','Cold insulation']
+    },
+    {
+      id:'thickness',
+      keywords:['thickness','temperature range','how thick','mm thickness','what temperature'],
+      answer:"Insulation thickness is calculated from pipe size and operating temperature. Our specification tables cover hot insulation from 50°C up to 500°C, and cold/cryogenic insulation down to -45°C. Share your pipe size and temperature with us and we'll confirm the exact thickness needed.",
+      quick:['Get a quote','Contact details']
+    },
+    {
+      id:'location',
+      keywords:['where are you','location','based','pune','address','coverage','area','all over india','which city'],
+      answer:"We're based in Viman Nagar, Pune, Maharashtra, and carry out insulation work all over India — not just locally.",
+      quick:['Contact details','Our services']
+    },
+    {
+      id:'contact',
+      keywords:['contact','phone','number','email','call','reach you','how to contact','mobile'],
+      answer:"You can reach us at +91 95118 91979 or vrinsulationpune@gmail.com. Or fill out the enquiry form on this page and we'll get back to you within one business day.",
+      quick:['Get a quote']
+    },
+    {
+      id:'quote',
+      keywords:['quote','price','cost','estimate','enquiry','how much','pricing','rate'],
+      answer:"Pricing depends on the project scope, pipe or vessel sizes, insulation type and site conditions. The best way to get an accurate quote is to fill out the enquiry form on this page with your project details, or call us directly at +91 95118 91979.",
+      quick:['Contact details']
+    },
+    {
+      id:'thanks',
+      keywords:['thanks','thank you','thx','thankyou'],
+      answer:"You're welcome! Let me know if there's anything else you'd like to know about VR Insulation.",
+      quick:['Our services','Get a quote']
+    },
+    {
+      id:'bye',
+      keywords:['bye','goodbye','see you','good night'],
+      answer:"Thanks for stopping by VR Insulation. Feel free to reach out anytime at +91 95118 91979 or vrinsulationpune@gmail.com.",
+      quick:[]
+    }
+  ];
+
+  var FALLBACK = "I don't have a specific answer for that yet, but I can help with our services, industries served, materials, experience, or how to get a quote. You can also reach our team directly at +91 95118 91979 or vrinsulationpune@gmail.com.";
+  var DEFAULT_QUICK = ['Our services','Industries we serve','Get a quote','Contact details'];
+
+  function vrChatNormalize(s){
+    return (s || '').toLowerCase().replace(/[^\w\s%°-]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function vrChatEscapeRegex(s){
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+  function vrChatKeywordMatches(msg, kw){
+    // Word-boundary match so short phrases like "who are you" don't false-positive
+    // inside longer words (e.g. "your"). \b works on the padded, space-joined msg.
+    // A optional (s|es|ing) suffix on the final word lets "audit" also catch
+    // "audits", "weatherproof" catch "weatherproofing", etc.
+    var re = new RegExp('\\b' + vrChatEscapeRegex(kw) + '(?:s|es|ing)?\\b');
+    return re.test(msg);
+  }
+
+  function vrChatFindAnswer(raw){
+    var msg = vrChatNormalize(raw);
+    if(!msg) return null;
+    var best = null, bestScore = 0;
+    for(var i=0;i<KB.length;i++){
+      var entry = KB[i], score = 0;
+      for(var j=0;j<entry.keywords.length;j++){
+        var kw = entry.keywords[j];
+        if(vrChatKeywordMatches(msg, kw)){
+          score += kw.split(' ').length; // multi-word phrase matches score higher
+        }
+      }
+      if(score > bestScore){ bestScore = score; best = entry; }
+    }
+    return best;
+  }
+
+  // ---------- UI wiring ----------
+  var root = document.getElementById('vr-chat-root');
+  var toggleBtn = document.getElementById('vr-chat-toggle');
+  var closeBtn = document.getElementById('vr-chat-close');
+  var backdrop = document.getElementById('vr-chat-backdrop');
+  var panel = document.getElementById('vr-chat-panel');
+  var messagesEl = document.getElementById('vr-chat-messages');
+  var quickEl = document.getElementById('vr-chat-quick');
+  var chatForm = document.getElementById('vr-chat-form');
+  var chatInput = document.getElementById('vr-chat-input');
+  var vrChatStarted = false;
+  var vrChatInactivityTimer = null;
+  var vrChatAwaitingContinue = false;
+  var VR_CHAT_INACTIVITY_MS = 60000;
+  var VR_CHAT_YES_WORDS = ['yes','y','sure','ok','okay','continue','yeah','yep'];
+
+  function vrChatClearInactivityTimer(){
+    if(vrChatInactivityTimer){ clearTimeout(vrChatInactivityTimer); vrChatInactivityTimer = null; }
+  }
+
+  function vrChatStartInactivityTimer(){
+    vrChatClearInactivityTimer();
+    vrChatInactivityTimer = setTimeout(vrChatShowContinuePrompt, VR_CHAT_INACTIVITY_MS);
+  }
+
+  function vrChatShowContinuePrompt(){
+    if(!root.classList.contains('open')) return;
+    vrChatAwaitingContinue = true;
+    vrChatAddMessage('Are you still there? Do you want to continue chatting?', 'bot');
+    vrChatSetQuick(['Yes','No']);
+  }
+
+  function vrChatScrollToEnd(){
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function vrChatAddMessage(text, who){
+    var bubble = document.createElement('div');
+    bubble.className = 'vr-chat-msg ' + who;
+    bubble.textContent = text;
+    messagesEl.appendChild(bubble);
+    vrChatScrollToEnd();
+  }
+
+  function vrChatSetQuick(list){
+    quickEl.innerHTML = '';
+    if(!list || !list.length){ quickEl.style.display = 'none'; return; }
+    quickEl.style.display = 'flex';
+    list.forEach(function(label){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = label;
+      b.addEventListener('click', function(){ vrChatHandleUserText(label); });
+      quickEl.appendChild(b);
+    });
+  }
+
+  function vrChatShowTyping(){
+    var t = document.createElement('div');
+    t.className = 'vr-chat-typing';
+    t.id = 'vr-chat-typing-indicator';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(t);
+    vrChatScrollToEnd();
+  }
+
+  function vrChatHideTyping(){
+    var t = document.getElementById('vr-chat-typing-indicator');
+    if(t) t.remove();
+  }
+
+  function vrChatHandleUserText(text){
+    text = (text || '').trim();
+    if(!text) return;
+    vrChatAddMessage(text, 'user');
+    chatInput.value = '';
+    vrChatSetQuick([]);
+
+    if(vrChatAwaitingContinue){
+      vrChatAwaitingContinue = false;
+      var isYes = VR_CHAT_YES_WORDS.indexOf(text.toLowerCase()) !== -1;
+      vrChatShowTyping();
+      setTimeout(function(){
+        vrChatHideTyping();
+        if(isYes){
+          vrChatAddMessage("Great, let's continue! Here's what I can help with:", 'bot');
+          vrChatSetQuick(DEFAULT_QUICK);
+          vrChatStartInactivityTimer();
+        } else {
+          vrChatAddMessage('Thank you for using our chatbot assistant.', 'bot');
+          vrChatSetQuick([]);
+          vrChatClearInactivityTimer();
+        }
+      }, 500);
+      return;
+    }
+
+    vrChatShowTyping();
+    var match = vrChatFindAnswer(text);
+    setTimeout(function(){
+      vrChatHideTyping();
+      if(match){
+        vrChatAddMessage(match.answer, 'bot');
+        vrChatSetQuick(match.quick && match.quick.length ? match.quick : DEFAULT_QUICK);
+      } else {
+        vrChatAddMessage(FALLBACK, 'bot');
+        vrChatSetQuick(DEFAULT_QUICK);
+      }
+      vrChatStartInactivityTimer();
+    }, 500 + Math.random()*400);
+  }
+
+  function vrChatOpen(){
+    root.classList.add('open');
+    panel.setAttribute('aria-hidden','false');
+    toggleBtn.setAttribute('aria-expanded','true');
+    if(!vrChatStarted){
+      vrChatStarted = true;
+      vrChatShowTyping();
+      setTimeout(function(){
+        vrChatHideTyping();
+        vrChatAddMessage("Hi there! I'm Vilas, your VR Insulation assistant. I can help with our services, the industries we work with, materials, our 30+ years of experience, or getting a quote — what can I help you with today?", 'bot');
+        vrChatSetQuick(DEFAULT_QUICK);
+      }, 500);
+    }
+    vrChatStartInactivityTimer();
+    setTimeout(function(){ chatInput.focus(); }, 200);
+  }
+
+  function vrChatClose(){
+    root.classList.remove('open');
+    panel.setAttribute('aria-hidden','true');
+    toggleBtn.setAttribute('aria-expanded','false');
+    vrChatAwaitingContinue = false;
+    vrChatClearInactivityTimer();
+    // Reset the conversation so the next open starts from scratch.
+    vrChatHideTyping();
+    messagesEl.innerHTML = '';
+    vrChatSetQuick([]);
+    vrChatStarted = false;
+  }
+
+  toggleBtn.addEventListener('click', function(){
+    if(root.classList.contains('open')) vrChatClose(); else vrChatOpen();
+  });
+  closeBtn.addEventListener('click', vrChatClose);
+  backdrop.addEventListener('click', vrChatClose);
+
+  chatForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    vrChatHandleUserText(chatInput.value);
+  });
+})();
 </script>
